@@ -19,6 +19,7 @@ const Banner = () => {
 					padding="17px 59px 18px 55px"
 					fontSize="1.5rem"
 					borderRadius="10px"
+					fontFamily="Montserrat"
 				/>
 			</LeftSideContainer>
 			<BannerImage />

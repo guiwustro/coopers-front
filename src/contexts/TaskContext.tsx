@@ -9,6 +9,9 @@ interface ITaskContext {
 	completedTasks: ITask[];
 	progressTasks: ITask[];
 	toogleTaskStatus: (id: number, status: "progress" | "done") => void;
+	deleteTask: (id: number) => void;
+	deleteAllTasks: (status: "done" | "progress") => void;
+	move: (from: number, to: number, idTask: number) => void;
 }
 export interface ITask {
 	id: number;
@@ -38,7 +41,6 @@ export const TaskContextProvider = ({ children }: IProviderProps) => {
 		setTasks((previous) => {
 			const newTasks = [...previous];
 			const newStatus = status === "done" ? "progress" : "done";
-			console.log(status, "s");
 			const actualTaskIndex = newTasks.findIndex((task) => task.id === id);
 			updateTaskStatus(id, newStatus);
 			if (actualTaskIndex != -1) {
@@ -58,6 +60,25 @@ export const TaskContextProvider = ({ children }: IProviderProps) => {
 		});
 	};
 
+	const deleteTask = (id: number) => {
+		api.delete(`/tasks/${id}`).then((res) => {
+			setTasks((previous) => {
+				return previous.filter((task) => task.id !== id);
+			});
+		});
+		// setTasks((previous) => {
+		// 	return previous.filter((task) => task.id !== id);
+		// });
+	};
+
+	const deleteAllTasks = (status: "done" | "progress") => {
+		api.delete(`/tasks/all/${status}`).then(() => {
+			setTasks((previous) => {
+				return previous.filter((task) => task.status !== status);
+			});
+		});
+	};
+
 	useEffect(() => {
 		const token = localStorage.getItem("@coopers:token");
 		api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -66,6 +87,17 @@ export const TaskContextProvider = ({ children }: IProviderProps) => {
 		}
 	}, []);
 
+	const move = (from: number, to: number, idTask: number) => {
+		setTasks((previous) => {
+			const newTasks = [...previous];
+			console.log(from, to, "ss", idTask);
+			newTasks.splice(to, 0, newTasks.splice(from, 1)[0]);
+			const newIndex = console.log(newTasks, "new");
+
+			return newTasks;
+		});
+	};
+
 	return (
 		<TaskContext.Provider
 			value={{
@@ -73,6 +105,9 @@ export const TaskContextProvider = ({ children }: IProviderProps) => {
 				completedTasks,
 				progressTasks,
 				toogleTaskStatus,
+				deleteTask,
+				deleteAllTasks,
+				move,
 			}}
 		>
 			{children}

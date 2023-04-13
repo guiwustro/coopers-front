@@ -7,6 +7,9 @@ import { useModalContext } from "../../contexts/ModalContext";
 import { useTaskContext } from "../../contexts/TaskContext";
 import { CardContainer, CardList } from "./styles";
 import Grafismo from "../../assets/grafismos-lateral-esquerda.svg";
+import Carroussel from "../../components/Carroussel";
+import ContactForm from "../../components/ContactForm";
+import Footer from "../../components/Footer";
 
 export const Home = () => {
 	const { isModalOpen } = useModalContext();
@@ -36,7 +39,9 @@ export const Home = () => {
 					/>
 				</CardList>
 			</CardContainer>
-
+			<Carroussel />
+			<ContactForm />
+			<Footer />
 			{isModalOpen && <ModalLogin />}
 		</>
 	);
