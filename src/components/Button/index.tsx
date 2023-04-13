@@ -8,6 +8,8 @@ interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	fontSize: string;
 	title: string;
 	borderRadius?: string;
+	boxShadow?: string;
+	fontFamily?: "Montserrat";
 }
 
 const Button = ({
@@ -18,6 +20,8 @@ const Button = ({
 	padding,
 	fontSize,
 	borderRadius,
+	boxShadow,
+	fontFamily,
 	...props
 }: IButtonProps) => {
 	return (
@@ -28,6 +32,8 @@ const Button = ({
 			padding={padding}
 			fontSize={fontSize}
 			borderRadius={borderRadius}
+			boxShadow={boxShadow}
+			fontFamily={fontFamily}
 			{...props}
 		>
 			{title}
