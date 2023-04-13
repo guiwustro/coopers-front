@@ -1,8 +1,19 @@
+import ModalProvider from "./contexts/ModalContext";
+import { TaskContextProvider } from "./contexts/TaskContext";
+import { UserContextProvider } from "./contexts/UserContext";
+import { AppRoutes } from "./routes";
+import GlobalStyle from "./styles/GlobalStyles";
+
 function App() {
 	return (
-		<div>
-			<h1>Teste</h1>
-		</div>
+		<UserContextProvider>
+			<TaskContextProvider>
+				<ModalProvider>
+					<GlobalStyle />
+					<AppRoutes />
+				</ModalProvider>
+			</TaskContextProvider>
+		</UserContextProvider>
 	);
 }
 
