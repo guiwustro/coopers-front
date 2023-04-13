@@ -18,7 +18,6 @@ export interface IFormLogin {
 const ModalLogin = () => {
 	const { toogleModal } = useModalContext();
 	const { loginUser, isAuthenticated } = useUserContext();
-	console.log(isAuthenticated, "ss");
 	const formSchema = yup.object().shape({
 		username: yup.string().required("Campo obrigatório"),
 		password: yup.string().required("Campo obrigatório"),
