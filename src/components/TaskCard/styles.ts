@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 interface ITaskCardProps {
 	borderColor: "orange" | "green";
@@ -39,18 +39,33 @@ export const TaskCardContainer = styled.div<ITaskCardProps>`
 	}
 
 	& > .task__list {
-		margin-bottom: 38px;
-		gap: 20px;
+		margin-bottom: 28px;
 		flex-direction: column;
 		display: flex;
 	}
 `;
 
-export const TaskItemContainer = styled.div`
+interface ITaskItemContainerProps {
+	isDragging?: boolean;
+}
+export const TaskItemContainer = styled.div<ITaskItemContainerProps>`
 	display: flex;
 	padding-left: 23px;
 	padding-right: 38px;
 	justify-content: space-between;
+	border: 1px solid transparent;
+	padding-bottom: 10px;
+	padding-top: 10px;
+	${(props) =>
+		props.isDragging &&
+		css`
+			border-color: rgba(0, 0, 0, 0.21);
+			border-style: dashed;
+			cursor: grabbing;
+			box-shadow: none;
+			background-color: white;
+		`}
+
 	.task__name {
 		display: flex;
 		gap: 16px;

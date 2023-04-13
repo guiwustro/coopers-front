@@ -16,19 +16,23 @@ export const TaskCard = ({
 	title,
 	subtitle,
 	tasks,
+	statusTask,
 }: ITaskCardProps) => {
+	const { deleteAllTasks } = useTaskContext();
+
 	return (
 		<TaskCardContainer borderColor={borderColor}>
 			<h3>{title}</h3>
 			<h4>{subtitle}</h4>
 			<div className="task__list">
-				{tasks.map((task) => {
+				{tasks.map((task, index) => {
 					return (
 						<TaskItem
 							key={task.id}
 							name={task.name}
 							type={task.status}
 							id={task.id}
+							index={index}
 						/>
 					);
 				})}
@@ -41,6 +45,8 @@ export const TaskCard = ({
 				width={300}
 				title="erase all"
 				borderRadius="10px"
+				fontFamily="Montserrat"
+				onClick={() => deleteAllTasks(statusTask)}
 			/>
 		</TaskCardContainer>
 	);
