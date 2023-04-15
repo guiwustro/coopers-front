@@ -6,7 +6,7 @@ const Banner = () => {
 	return (
 		<Container>
 			<LeftSideContainer>
-				<h1 className="main__tittle">
+				<h1 className="main__title">
 					<span className="main__title--black">Organize</span>
 					<span className="main__title--green">your daily jobs</span>
 				</h1>
@@ -16,7 +16,6 @@ const Banner = () => {
 					backgroundColor="green"
 					width={300}
 					height={64}
-					padding="17px 59px 18px 55px"
 					fontSize="1.5rem"
 					borderRadius="10px"
 					fontFamily="Montserrat"

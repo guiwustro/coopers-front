@@ -31,7 +31,7 @@ export const Container = styled.div`
 		text-align: center;
 		max-width: 600px;
 		color: #ffffff;
-		padding-top: 32px;
+		padding: 32px 20px 0px 20px;
 	}
 `;
 export const Title = styled.div`
@@ -43,7 +43,6 @@ export const Title = styled.div`
 		font-weight: 600;
 		font-size: 3.75rem;
 		line-height: 60px;
-		/* identical to box height, or 100% */
 		color: #ffffff;
 	}
 `;

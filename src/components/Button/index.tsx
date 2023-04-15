@@ -2,7 +2,7 @@ import { ButtonStyle } from "./styles";
 
 interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	backgroundColor: "green" | "black";
-	width: number;
+	width?: number;
 	height: number;
 	padding?: string;
 	fontSize: string;

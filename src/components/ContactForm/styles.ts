@@ -8,30 +8,55 @@ export const Container = styled.div`
 	border-radius: 4px;
 	max-width: 700px;
 	margin: 172px auto 0;
+	width: 90%;
 
 	& > .figure__container {
 		height: 87px;
 	}
 	& > .figure__container > figure {
 		position: relative;
-		width: 191px;
-		height: 191px;
+		width: 150px;
+		height: 150px;
 		bottom: 99px;
-
 		& > .contact-image {
 			position: absolute;
 			top: 0px;
 			right: 0px;
+			width: 150px;
+			height: 150px;
 		}
 		& > .graphism-image {
 			position: absolute;
+			right: 40px;
 			top: 86px;
-			right: 85px;
+		}
+	}
+	@media screen and (min-width: 768px) {
+		width: 100%;
+
+		& > .figure__container > figure {
+			position: relative;
+			width: 191px;
+			height: 191px;
+			bottom: 99px;
+
+			& > .contact-image {
+				position: absolute;
+				top: 0px;
+				right: 0px;
+				width: 191px;
+				height: 191px;
+			}
+			& > .graphism-image {
+				top: 86px;
+			}
 		}
 	}
 `;
 
 export const FormContainer = styled.div`
+	width: 100%;
+	padding: 0 40px;
 	& > .title-contact__container {
 		display: flex;
 		gap: 24px;
@@ -59,9 +84,21 @@ export const FormContainer = styled.div`
 		flex-direction: column;
 		gap: 24px;
 		padding-bottom: 60px;
+
 		.form__group--inline {
 			display: flex;
+			flex-direction: column;
 			gap: 20px;
+		}
+	}
+	@media screen and (min-width: 768px) {
+		width: auto;
+		padding: 0;
+		& > form {
+			.form__group--inline {
+				display: flex;
+				flex-direction: row;
+			}
 		}
 	}
 `;

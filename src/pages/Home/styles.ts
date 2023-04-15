@@ -11,6 +11,13 @@ export const CardContainer = styled.div`
 	position: relative;
 	.to-do__grafismo {
 		position: absolute;
+		width: 10%;
+	}
+	@media screen and (min-width: 768px) {
+		.to-do__grafismo {
+			z-index: -1;
+			width: auto;
+		}
 	}
 `;
 
@@ -18,4 +25,9 @@ export const CardList = styled.div`
 	display: flex;
 	justify-content: center;
 	gap: 41px;
+	flex-direction: column;
+	align-items: center;
+	@media screen and (min-width: 900px) {
+		flex-direction: row;
+	}
 `;

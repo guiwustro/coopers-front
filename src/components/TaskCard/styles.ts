@@ -5,7 +5,7 @@ interface ITaskCardProps {
 }
 
 export const TaskCardContainer = styled.div<ITaskCardProps>`
-	width: 380px;
+	width: 80%;
 	padding: 40px 23px 40px 23px;
 	border-top: 20px solid;
 	border-color: ${(props) =>
@@ -42,6 +42,10 @@ export const TaskCardContainer = styled.div<ITaskCardProps>`
 		margin-bottom: 28px;
 		flex-direction: column;
 		display: flex;
+	}
+
+	@media screen and (min-width: 464px) {
+		width: 380px;
 	}
 `;
 

@@ -102,7 +102,6 @@ const ContactForm = () => {
 						backgroundColor="green"
 						fontSize="16px"
 						height={52}
-						width={580}
 						borderRadius="4px"
 						title="SEND NOW"
 						fontFamily="Montserrat"
