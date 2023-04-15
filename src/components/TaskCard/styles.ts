@@ -44,7 +44,7 @@ export const TaskCardContainer = styled.div<ITaskCardProps>`
 		display: flex;
 	}
 
-	@media screen and (min-width: 464px) {
+	@media screen and (min-width: 400px) {
 		width: 380px;
 	}
 `;
@@ -54,12 +54,11 @@ interface ITaskItemContainerProps {
 }
 export const TaskItemContainer = styled.div<ITaskItemContainerProps>`
 	display: flex;
-	padding-left: 23px;
-	padding-right: 38px;
+
 	justify-content: space-between;
 	border: 1px solid transparent;
-	padding-bottom: 10px;
-	padding-top: 10px;
+	padding: 0px 0px 10px 0px;
+
 	${(props) =>
 		props.isDragging &&
 		css`
@@ -73,6 +72,7 @@ export const TaskItemContainer = styled.div<ITaskItemContainerProps>`
 	.task__name {
 		display: flex;
 		gap: 16px;
+		word-break: break-word;
 
 		& > button {
 			background-color: transparent;
@@ -95,5 +95,16 @@ export const TaskItemContainer = styled.div<ITaskItemContainerProps>`
 		line-height: 24px;
 		color: #999999;
 		background-color: transparent;
+	}
+	@media screen and (min-width: 400px) {
+		padding: 10px 38px 10px 23px;
+	}
+`;
+
+export const ContainerButton = styled.div`
+	display: flex;
+	justify-content: center;
+	& > button {
+		max-width: 300px;
 	}
 `;

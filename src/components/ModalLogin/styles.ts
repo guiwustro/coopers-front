@@ -16,7 +16,8 @@ export const ModalContainer = styled.div`
 	width: 80%;
 	background-color: white;
 	overflow-y: auto;
-	max-height: 720px;
+	max-height: 90vh;
+
 	.modal__header {
 		display: flex;
 		justify-content: flex-end;
@@ -80,44 +81,44 @@ export const ModalContainer = styled.div`
 			padding-bottom: 56px;
 		}
 	}
-	@media screen and (min-width: 610px) {
-		gap: 42px;
-		& > .modal__right-side {
-			& > .modal__title {
-				font-size: 5rem;
-				line-height: 4rem;
 
-				& > .modal__title--green {
-					font-size: 3.125rem;
+	@media screen and (min-width: 768px) {
+		.modal__body {
+			gap: 20px;
+			justify-content: unset;
+			form {
+				max-width: 342px;
+				& > .form__inputs {
+					width: 100%;
 				}
 			}
-		}
-		form {
-			max-width: 342px;
-			& > .form__inputs {
-				width: 100%;
+			& > .modal__left-side {
+				& > .modal__image {
+					display: block;
+				}
 			}
 		}
 	}
 
 	@media screen and (min-width: 1024px) {
 		width: 932px;
-		height: 100%;
-
+		padding-left: 56px;
+		gap: 42px;
 		form {
 			padding-top: 84px;
 		}
 		.modal__body {
 			justify-content: unset;
 			padding-left: 56px;
-
-			& > .modal__left-side {
-				& > .modal__image {
-					display: block;
-				}
-			}
 			& > .modal__right-side {
-				padding-top: 57px;
+				& > .modal__title {
+					font-size: 5rem;
+					line-height: 4rem;
+
+					& > .modal__title--green {
+						font-size: 3.125rem;
+					}
+				}
 			}
 		}
 	}

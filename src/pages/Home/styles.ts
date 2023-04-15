@@ -28,6 +28,7 @@ export const CardList = styled.div`
 	flex-direction: column;
 	align-items: center;
 	@media screen and (min-width: 900px) {
+		align-items: flex-start;
 		flex-direction: row;
 	}
 `;

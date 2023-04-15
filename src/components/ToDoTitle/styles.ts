@@ -27,7 +27,7 @@ export const Container = styled.div`
 		font-family: "Montserrat";
 		font-style: normal;
 		font-weight: 500;
-		font-size: 1.5rem;
+		font-size: 1.3rem;
 		line-height: 29px;
 		text-align: center;
 		max-width: 600px;
@@ -42,8 +42,18 @@ export const Title = styled.div`
 		font-family: "Poppins";
 		font-style: normal;
 		font-weight: 600;
-		font-size: 3.75rem;
-		line-height: 60px;
+		font-size: 3rem;
 		color: #ffffff;
+		text-align: center;
+	}
+
+	@media screen and (min-width: 768px) {
+		& > h2 {
+			font-size: 3.75rem;
+			line-height: 60px;
+		}
+		& > p {
+			font-size: 1.5rem;
+		}
 	}
 `;

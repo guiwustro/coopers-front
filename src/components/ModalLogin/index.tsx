@@ -75,7 +75,7 @@ const ModalLogin = () => {
 									register={register}
 									errors={errors.password?.message}
 									registerName={"password"}
-									typeInput="text"
+									typeInput="password"
 								/>
 							</div>
 							<CenterContainer>

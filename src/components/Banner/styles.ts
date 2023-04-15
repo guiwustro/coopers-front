@@ -14,6 +14,10 @@ export const Container = styled.div`
 		flex-direction: row;
 		padding-bottom: 75px;
 	}
+	@media screen and (min-width: 1440px) {
+		max-width: 1440px;
+		margin: 0 auto;
+	}
 `;
 
 export const LeftSideContainer = styled.div`

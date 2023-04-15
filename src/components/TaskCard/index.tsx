@@ -1,7 +1,7 @@
 import { ITask, useTaskContext } from "../../contexts/TaskContext";
 import Button from "../Button";
 import TaskItem from "./TaskItem";
-import { TaskCardContainer } from "./styles";
+import { ContainerButton, TaskCardContainer } from "./styles";
 
 interface ITaskCardProps {
 	borderColor: "green" | "orange";
@@ -37,17 +37,17 @@ export const TaskCard = ({
 					);
 				})}
 			</div>
-
-			<Button
-				backgroundColor="black"
-				fontSize="1.5rem"
-				height={64}
-				width={300}
-				title="erase all"
-				borderRadius="10px"
-				fontFamily="Montserrat"
-				onClick={() => deleteAllTasks(statusTask)}
-			/>
+			<ContainerButton>
+				<Button
+					backgroundColor="black"
+					fontSize="1.5rem"
+					height={64}
+					title="erase all"
+					borderRadius="10px"
+					fontFamily="Montserrat"
+					onClick={() => deleteAllTasks(statusTask)}
+				/>
+			</ContainerButton>
 		</TaskCardContainer>
 	);
 };
