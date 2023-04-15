@@ -34,7 +34,11 @@ export const Home = () => {
 						tasks={completedTasks}
 						borderColor="green"
 						title="Done"
-						subtitle="You have done 5 tasks."
+						subtitle={
+							completedTasks.length > 0
+								? `You have done ${completedTasks.length} tasks.`
+								: "You have done no tasks "
+						}
 						statusTask="done"
 					/>
 				</CardList>
