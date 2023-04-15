@@ -2,20 +2,34 @@ import styled from "styled-components";
 import font from "../../fonts/SoleilRegular.otf";
 export const Container = styled.div`
 	position: relative;
-	width: 360px;
+	margin-right: 20px;
+	width: 260px;
 	border-radius: 16px;
 	background-color: white;
-	box-shadow: 8px 8px 24px rgba(12, 41, 208, 0.16);
+	box-shadow: rgba(12, 41, 208, 0.16) 10px 9px 13px 0px;
 	margin-bottom: 30px;
 	.carroussel-card__image {
-		height: 200px;
+		height: 180px;
+		object-fit: cover;
+		border-top-right-radius: 16px;
+		border-top-left-radius: 16px;
 	}
 	.logo_coopers {
 		position: absolute;
-		right: 20px;
-		top: 170px;
+		right: 10px;
+		top: 152px;
 	}
-	& > span {
+
+	@media screen and (min-width: 500px) {
+		.carroussel-card__image {
+			height: 200px;
+		}
+		width: 360px;
+		.logo_coopers {
+			position: absolute;
+			right: 20px;
+			top: 170px;
+		}
 	}
 `;
 
@@ -24,7 +38,10 @@ export const CardContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: 24px;
-	height: 430px;
+	height: 400px;
+	@media screen and (min-width: 500px) {
+		height: 430px;
+	}
 `;
 
 export const Description = styled.div`
@@ -53,7 +70,7 @@ export const Description = styled.div`
 		font-family: "Montserrat";
 		font-style: normal;
 		font-weight: 500;
-		font-size: 1.125rem;
+		font-size: 0.9rem;
 		line-height: 120%;
 		color: #312f4f;
 		padding-top: 16px;
@@ -69,5 +86,11 @@ export const Description = styled.div`
 		position: absolute;
 		left: 32px;
 		bottom: 23px;
+	}
+
+	@media screen and (min-width: 500px) {
+		& > h4 {
+			font-size: 1.125rem;
+		}
 	}
 `;

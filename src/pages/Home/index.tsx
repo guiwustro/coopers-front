@@ -39,7 +39,7 @@ export const Home = () => {
 					/>
 				</CardList>
 			</CardContainer>
-			{/* <Carroussel /> */}
+			<Carroussel />
 			<ContactForm />
 			<Footer />
 			{isModalOpen && <ModalLogin />}
