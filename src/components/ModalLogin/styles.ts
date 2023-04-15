@@ -13,8 +13,10 @@ export const Container = styled.div`
 `;
 
 export const ModalContainer = styled.div`
-	width: 932px;
+	width: 80%;
 	background-color: white;
+	overflow-y: auto;
+	max-height: 720px;
 	.modal__header {
 		display: flex;
 		justify-content: flex-end;
@@ -37,40 +39,86 @@ export const ModalContainer = styled.div`
 	.modal__body {
 		display: flex;
 		flex-direction: row;
-		padding-left: 56px;
-		gap: 42px;
+		justify-content: center;
+
 		& > .modal__left-side {
 			padding-top: 12px;
+
+			& > .modal__image {
+				display: none;
+			}
 		}
 		& > .modal__right-side {
-			padding-top: 57px;
-			& > .main__title {
+			width: 90%;
+
+			& > .modal__title {
 				font-family: "Montserrat";
 				font-weight: 700;
-				font-size: 5rem;
-				line-height: 4rem;
+				font-size: 4rem;
 				display: flex;
 				flex-direction: column;
 
 				color: var(--black);
-				& > .main__title--green {
+				& > .modal__title--green {
 					color: var(--green-200);
 					font-weight: 400;
-					font-size: 3.125rem;
+					font-size: 2.4rem;
 				}
 			}
 		}
 	}
 
 	form {
-		padding-top: 84px;
+		padding-top: 24px;
 		padding-bottom: 53px;
-		max-width: 342px;
+		max-width: 100%;
+		flex-direction: column;
 		& > .form__inputs {
 			display: flex;
 			flex-direction: column;
 			gap: 30px;
 			padding-bottom: 56px;
+		}
+	}
+	@media screen and (min-width: 610px) {
+		gap: 42px;
+		& > .modal__right-side {
+			& > .modal__title {
+				font-size: 5rem;
+				line-height: 4rem;
+
+				& > .modal__title--green {
+					font-size: 3.125rem;
+				}
+			}
+		}
+		form {
+			max-width: 342px;
+			& > .form__inputs {
+				width: 100%;
+			}
+		}
+	}
+
+	@media screen and (min-width: 1024px) {
+		width: 932px;
+		height: 100%;
+
+		form {
+			padding-top: 84px;
+		}
+		.modal__body {
+			justify-content: unset;
+			padding-left: 56px;
+
+			& > .modal__left-side {
+				& > .modal__image {
+					display: block;
+				}
+			}
+			& > .modal__right-side {
+				padding-top: 57px;
+			}
 		}
 	}
 `;

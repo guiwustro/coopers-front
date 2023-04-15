@@ -45,6 +45,7 @@ export const LeftSideContainer = styled.div`
 			font-size: 5rem;
 			line-height: 4rem;
 			margin-top: 104px;
+
 			& > .main__title--green {
 				font-size: 3.75rem;
 			}

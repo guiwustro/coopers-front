@@ -9,7 +9,7 @@ export const Container = styled.div`
 	max-width: 700px;
 	margin: 172px auto 0;
 	width: 90%;
-
+	padding: 0 40px;
 	& > .figure__container {
 		height: 87px;
 	}
@@ -49,6 +49,7 @@ export const Container = styled.div`
 			}
 			& > .graphism-image {
 				top: 86px;
+				right: 86px;
 			}
 		}
 	}
@@ -56,7 +57,6 @@ export const Container = styled.div`
 
 export const FormContainer = styled.div`
 	width: 100%;
-	padding: 0 40px;
 	& > .title-contact__container {
 		display: flex;
 		gap: 24px;
@@ -92,8 +92,6 @@ export const FormContainer = styled.div`
 		}
 	}
 	@media screen and (min-width: 768px) {
-		width: auto;
-		padding: 0;
 		& > form {
 			.form__group--inline {
 				display: flex;

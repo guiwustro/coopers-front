@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import blackBackGround from "../../assets/bg-black-horizontal.png";
-
+import blackBackGroundBigScreen from "../../assets/bg-black-bigscreen.svg";
 interface ITaskCardProps {
 	borderColor: "orange" | "green";
 }
@@ -13,7 +13,8 @@ export const ContainerBackGround = styled.div`
 	z-index: -3;
 	position: relative;
 
-	@media screen and (min-width: 1440px) {
+	@media screen and (min-width: 1441px) {
+		background-image: url(${blackBackGroundBigScreen});
 	}
 `;
 

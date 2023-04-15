@@ -10,10 +10,19 @@ interface IInputProps {
 }
 
 export const FormGroupContainer = styled.div<IFormGroupProps>`
-	width: 342px;
+	width: 100%;
+
 	display: flex;
 	flex-direction: column;
 	gap: 3px;
+	@media screen and (min-width: 768px) {
+		width: 342px;
+		${(props) =>
+			props.isContactInput &&
+			css`
+				width: 100%;
+			`}
+	}
 	${(props) =>
 		props.isContactInput &&
 		css`

@@ -52,13 +52,14 @@ const ModalLogin = () => {
 					<div className="modal__left-side">
 						<img
 							src={WomanLoginImage}
-							alt="Desenho de uma mulher apontando para o título"
+							alt="Login Image"
+							className="modal__image"
 						/>
 					</div>
 					<div className="modal__right-side">
-						<h1 className="main__title">
-							<span className="main__title--black">Sign in</span>
-							<span className="main__title--green">to access your list</span>
+						<h1 className="modal__title">
+							<span className="modal__title--black">Sign in</span>
+							<span className="modal__title--green">to access your list</span>
 						</h1>
 						<form onSubmit={handleSubmit(onSuccess, onError)}>
 							<div className="form__inputs">
