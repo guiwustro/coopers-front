@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { api } from "../api";
+import { useUserContext } from "./UserContext";
 
 export interface IProviderProps {
 	children: React.ReactNode;
@@ -12,6 +13,8 @@ interface ITaskContext {
 	deleteTask: (id: number) => void;
 	deleteAllTasks: (status: "done" | "progress") => void;
 	move: (from: number, to: number, idTask: number) => void;
+	addTask: (name: string) => void;
+	editTaskName: (id: number, name: string) => void;
 }
 export interface ITask {
 	id: number;
@@ -23,6 +26,7 @@ export interface ITask {
 const TaskContext = createContext({} as ITaskContext);
 
 export const TaskContextProvider = ({ children }: IProviderProps) => {
+	const { setIsAuthenticated } = useUserContext();
 	const [tasks, setTasks] = useState<ITask[]>([]);
 	const completedTasks = tasks?.filter((task) => task.status === "done");
 	const progressTasks = tasks?.filter((task) => task.status === "progress");
@@ -31,8 +35,11 @@ export const TaskContextProvider = ({ children }: IProviderProps) => {
 			.get("/tasks")
 			.then((response) => {
 				setTasks(response.data);
+				setIsAuthenticated(true);
 			})
 			.catch((error) => {
+				setIsAuthenticated(false);
+
 				console.log(error);
 			});
 	};
@@ -54,9 +61,25 @@ export const TaskContextProvider = ({ children }: IProviderProps) => {
 	};
 
 	const updateTaskStatus = (id: number, status: "progress" | "done") => {
-		console.log(status);
 		api.patch(`/tasks/${id}`, { status }).then((res) => {
 			console.log(res.data);
+		});
+	};
+
+	const editTaskName = (id: number, name: string) => {
+		api.patch(`/tasks/${id}`, { name }).then((res) => {
+			setTasks((previous) => {
+				const copyTasks = [...previous];
+				const editedTask = previous.findIndex((t) => t.id === id);
+				copyTasks[editedTask] = { ...copyTasks[editedTask], name };
+				return copyTasks;
+			});
+		});
+	};
+
+	const addTask = (name: string) => {
+		api.post(`/tasks`, { name }).then((res) => {
+			setTasks((previous) => [...previous, res.data]);
 		});
 	};
 
@@ -66,9 +89,6 @@ export const TaskContextProvider = ({ children }: IProviderProps) => {
 				return previous.filter((task) => task.id !== id);
 			});
 		});
-		// setTasks((previous) => {
-		// 	return previous.filter((task) => task.id !== id);
-		// });
 	};
 
 	const deleteAllTasks = (status: "done" | "progress") => {
@@ -108,6 +128,8 @@ export const TaskContextProvider = ({ children }: IProviderProps) => {
 				deleteTask,
 				deleteAllTasks,
 				move,
+				addTask,
+				editTaskName,
 			}}
 		>
 			{children}

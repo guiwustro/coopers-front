@@ -15,4 +15,8 @@ export const Container = styled.div`
 			width: auto;
 		}
 	}
+	@media screen and (min-width: 1440px) {
+		max-width: 1440px;
+		margin: 54px auto 0;
+	}
 `;

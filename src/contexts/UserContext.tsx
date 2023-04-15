@@ -16,6 +16,7 @@ interface IUserContext {
 	loginUser: (data: IFormLogin) => void;
 	logout: () => void;
 	isAuthenticated: boolean;
+	setIsAuthenticated: (value: SetStateAction<boolean>) => void;
 }
 
 export interface ILoginRes {
@@ -33,6 +34,7 @@ export const UserContextProvider = ({ children }: IProviderProps) => {
 		try {
 			const { data }: ILoginRes = await api.post("/login", loginData);
 			localStorage.setItem("@coopers:token", data.token);
+			setIsAuthenticated(true);
 		} catch (error) {
 			console.log(error);
 		}
@@ -40,7 +42,7 @@ export const UserContextProvider = ({ children }: IProviderProps) => {
 
 	const logout = () => {
 		setIsAuthenticated(false);
-		localStorage.removeItem("@me-au:token");
+		localStorage.removeItem("@coopers:token");
 	};
 
 	return (
@@ -49,6 +51,7 @@ export const UserContextProvider = ({ children }: IProviderProps) => {
 				logout,
 				loginUser,
 				isAuthenticated,
+				setIsAuthenticated,
 			}}
 		>
 			{children}
