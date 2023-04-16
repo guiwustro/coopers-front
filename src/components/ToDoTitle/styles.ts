@@ -12,8 +12,9 @@ export const ContainerBackGround = styled.div`
 	height: 420px;
 	z-index: -3;
 	position: relative;
+	background-image: url(${blackBackGroundBigScreen});
 
-	@media screen and (min-width: 1441px) {
+	@media screen and (min-width: 1440px) {
 		background-image: url(${blackBackGroundBigScreen});
 	}
 `;
@@ -56,4 +57,9 @@ export const Title = styled.div`
 			font-size: 1.5rem;
 		}
 	}
+`;
+
+export const CenterContainer = styled.div`
+	display: flex;
+	justify-content: center;
 `;

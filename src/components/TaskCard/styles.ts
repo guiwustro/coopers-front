@@ -4,7 +4,7 @@ interface ITaskCardProps {
 	borderColor: "orange" | "green";
 }
 
-export const TaskCardContainer = styled.div<ITaskCardProps>`
+export const TaskCardContainer = styled.li<ITaskCardProps>`
 	width: 80%;
 	padding: 40px 23px 40px 23px;
 	border-top: 20px solid;
@@ -36,6 +36,18 @@ export const TaskCardContainer = styled.div<ITaskCardProps>`
 		line-height: 29px;
 		text-align: center;
 		padding-bottom: 30px;
+
+		& > button {
+			font-family: "Montserrat";
+			text-align: center;
+			font-weight: 600;
+			font-size: 1.5rem;
+			color: var(--green-300);
+			background-color: transparent;
+			:hover {
+				filter: brightness(1.5);
+			}
+		}
 	}
 
 	& > .task__list {
@@ -86,16 +98,23 @@ export const TaskItemContainer = styled.div<ITaskItemContainerProps>`
 			align-self: center;
 		}
 	}
-
-	.task-button__delete {
-		font-family: "Montserrat";
-		font-style: normal;
-		font-weight: 700;
-		font-size: 0.75rem;
-		line-height: 24px;
-		color: #999999;
-		background-color: transparent;
+	& > .task-button__container {
+		display: flex;
+		align-items: center;
+		.task-button__delete {
+			font-family: "Montserrat";
+			font-style: normal;
+			font-weight: 700;
+			font-size: 0.75rem;
+			line-height: 24px;
+			color: #999999;
+			background-color: transparent;
+		}
+		.task-button__edit {
+			background-color: transparent;
+		}
 	}
+
 	@media screen and (min-width: 400px) {
 		padding: 10px 38px 10px 23px;
 	}
@@ -106,5 +125,35 @@ export const ContainerButton = styled.div`
 	justify-content: center;
 	& > button {
 		max-width: 300px;
+	}
+`;
+
+export const AddButton = styled.button`
+	background-color: var(--orange);
+	color: white;
+	font-family: "Montserrat";
+	font-style: normal;
+	font-weight: 700;
+	font-size: 0.9rem;
+	height: 34px;
+	padding: 5px 10px;
+	border-radius: 5px;
+	:disabled {
+		background-color: rgb(153, 153, 153);
+	}
+`;
+
+export const FormAddContainer = styled.form`
+	padding: 0 38px 0 23px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	& > textarea {
+		resize: none;
+		border-radius: 4px;
+		border-color: #999999;
+		min-height: 46px;
+		width: 200px;
+		padding: 8px;
 	}
 `;

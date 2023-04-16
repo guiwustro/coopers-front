@@ -9,6 +9,7 @@ import Button from "../Button";
 import { CenterContainer, Container, ModalContainer } from "./styles";
 import { FormGroup } from "../FormGroup";
 import { useUserContext } from "../../contexts/UserContext";
+import { toast } from "react-hot-toast";
 
 export interface IFormLogin {
 	username: string;
@@ -17,7 +18,7 @@ export interface IFormLogin {
 
 const ModalLogin = () => {
 	const { toogleModal } = useModalContext();
-	const { loginUser, isAuthenticated } = useUserContext();
+	const { loginUser } = useUserContext();
 	const formSchema = yup.object().shape({
 		username: yup.string().required("Campo obrigatório"),
 		password: yup.string().required("Campo obrigatório"),
@@ -32,12 +33,12 @@ const ModalLogin = () => {
 
 	const onError = () => {
 		// toast.error("Preencha todos os campos corretamente");
+		toast.error("Wrong e-mail or password.");
 	};
 
 	const onSuccess = (data: IFormLogin) => {
 		//chamada de login
 		loginUser(data);
-		toogleModal();
 	};
 
 	return (
@@ -85,6 +86,7 @@ const ModalLogin = () => {
 									height={64}
 									width={300}
 									title="Sign in"
+									type="submit"
 								/>
 							</CenterContainer>
 						</form>

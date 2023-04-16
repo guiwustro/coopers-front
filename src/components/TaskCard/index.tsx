@@ -1,5 +1,9 @@
+import { useModalContext } from "../../contexts/ModalContext";
 import { ITask, useTaskContext } from "../../contexts/TaskContext";
+import { useUserContext } from "../../contexts/UserContext";
 import Button from "../Button";
+import TaskEditForm from "../TaskEdit";
+import TaskAddForm from "./TaskAddForm";
 import TaskItem from "./TaskItem";
 import { ContainerButton, TaskCardContainer } from "./styles";
 
@@ -18,25 +22,42 @@ export const TaskCard = ({
 	tasks,
 	statusTask,
 }: ITaskCardProps) => {
-	const { deleteAllTasks } = useTaskContext();
+	const { deleteAllTasks, editTaskModal } = useTaskContext();
+	const { isAuthenticated } = useUserContext();
+	const { toogleModal, openAlert } = useModalContext();
+	if (!isAuthenticated) {
+		return (
+			<TaskCardContainer borderColor={borderColor}>
+				<h3>{title}</h3>
+				<h4>
+					You must
+					<button onClick={toogleModal}>Login</button>
+					with an account to see your tasks!
+				</h4>
+			</TaskCardContainer>
+		);
+	}
 
 	return (
 		<TaskCardContainer borderColor={borderColor}>
 			<h3>{title}</h3>
 			<h4>{subtitle}</h4>
-			<div className="task__list">
+			{statusTask === "progress" && <TaskAddForm />}
+			<ul className="task__list">
 				{tasks.map((task, index) => {
 					return (
-						<TaskItem
-							key={task.id}
-							name={task.name}
-							type={task.status}
-							id={task.id}
-							index={index}
-						/>
+						<>
+							<TaskItem
+								key={task.id}
+								name={task.name}
+								type={task.status}
+								id={task.id}
+								index={index}
+							/>
+						</>
 					);
 				})}
-			</div>
+			</ul>
 			<ContainerButton>
 				<Button
 					backgroundColor="black"
@@ -45,9 +66,12 @@ export const TaskCard = ({
 					title="erase all"
 					borderRadius="10px"
 					fontFamily="Montserrat"
-					onClick={() => deleteAllTasks(statusTask)}
+					onClick={() => {
+						openAlert(statusTask);
+					}}
 				/>
 			</ContainerButton>
+			{editTaskModal.isOpen && <TaskEditForm />}
 		</TaskCardContainer>
 	);
 };

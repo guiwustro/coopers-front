@@ -1,3 +1,4 @@
+import { Toaster } from "react-hot-toast";
 import ModalProvider from "./contexts/ModalContext";
 import { TaskContextProvider } from "./contexts/TaskContext";
 import { UserContextProvider } from "./contexts/UserContext";
@@ -9,14 +10,15 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 function App() {
 	return (
 		<DndProvider backend={HTML5Backend}>
-			<UserContextProvider>
-				<TaskContextProvider>
-					<ModalProvider>
+			<ModalProvider>
+				<UserContextProvider>
+					<TaskContextProvider>
 						<GlobalStyle />
 						<AppRoutes />
-					</ModalProvider>
-				</TaskContextProvider>
-			</UserContextProvider>
+						<Toaster />
+					</TaskContextProvider>
+				</UserContextProvider>
+			</ModalProvider>
 		</DndProvider>
 	);
 }

@@ -14,7 +14,13 @@ interface ITaskContext {
 	deleteAllTasks: (status: "done" | "progress") => void;
 	move: (from: number, to: number, idTask: number) => void;
 	addTask: (name: string) => void;
-	editTaskName: (id: number, name: string) => void;
+	editTaskName: (name: string) => void;
+	toogleEditTaskModal: (
+		idTask: number,
+		cordinatesTask: ICordinatesTask
+	) => void;
+	editTaskModal: IEditTaskModal;
+	updateCordinatesOnScroll: (cordinates: ICordinatesTask) => void;
 }
 export interface ITask {
 	id: number;
@@ -23,11 +29,33 @@ export interface ITask {
 	index_number: number;
 }
 
+interface IEditTaskModal {
+	isOpen: boolean;
+	idTask: number;
+	cordinates: ICordinatesTask;
+}
+
+export interface ICordinatesTask {
+	x: number;
+	y: number;
+	width: number;
+}
+
 const TaskContext = createContext({} as ITaskContext);
 
 export const TaskContextProvider = ({ children }: IProviderProps) => {
-	const { setIsAuthenticated } = useUserContext();
+	const { setIsAuthenticated, isAuthenticated } = useUserContext();
 	const [tasks, setTasks] = useState<ITask[]>([]);
+	const [editTaskModal, setEditTaskModal] = useState<IEditTaskModal>({
+		isOpen: false,
+		idTask: 0,
+		cordinates: {
+			x: 0,
+			y: 0,
+			width: 0,
+		},
+	});
+
 	const completedTasks = tasks?.filter((task) => task.status === "done");
 	const progressTasks = tasks?.filter((task) => task.status === "progress");
 	const getAllTasks = () => {
@@ -66,7 +94,8 @@ export const TaskContextProvider = ({ children }: IProviderProps) => {
 		});
 	};
 
-	const editTaskName = (id: number, name: string) => {
+	const editTaskName = (name: string) => {
+		const id = editTaskModal.idTask;
 		api.patch(`/tasks/${id}`, { name }).then((res) => {
 			setTasks((previous) => {
 				const copyTasks = [...previous];
@@ -74,12 +103,13 @@ export const TaskContextProvider = ({ children }: IProviderProps) => {
 				copyTasks[editedTask] = { ...copyTasks[editedTask], name };
 				return copyTasks;
 			});
+			toogleEditTaskModal(0, { x: 0, y: 0, width: 0 });
 		});
 	};
 
 	const addTask = (name: string) => {
 		api.post(`/tasks`, { name }).then((res) => {
-			setTasks((previous) => [...previous, res.data]);
+			setTasks((previous) => [res.data, ...previous]);
 		});
 	};
 
@@ -105,16 +135,65 @@ export const TaskContextProvider = ({ children }: IProviderProps) => {
 		if (token) {
 			getAllTasks();
 		}
-	}, []);
+	}, [isAuthenticated]);
 
 	const move = (from: number, to: number, idTask: number) => {
+		let newIndex;
+		let status;
 		setTasks((previous) => {
 			const newTasks = [...previous];
 			console.log(from, to, "ss", idTask);
 			newTasks.splice(to, 0, newTasks.splice(from, 1)[0]);
-			const newIndex = console.log(newTasks, "new");
+
+			const actualTaskIndex = newTasks.findIndex((t) => t.id === idTask);
+
+			// caso não tenha última tarefa definida
+			let nextTaskIndexNumber =
+				(newTasks[actualTaskIndex - 1]?.index_number || 0) + 1024;
+			// caso não tenha a primeira tarefa definida
+			let previousTaskIndexNumber =
+				(newTasks[actualTaskIndex - 1]?.index_number || 0) - 1024;
+
+			if (newTasks[actualTaskIndex - 1]) {
+				previousTaskIndexNumber = newTasks[actualTaskIndex - 1].index_number;
+			}
+			if (newTasks[actualTaskIndex + 1]) {
+				nextTaskIndexNumber = newTasks[actualTaskIndex + 1].index_number;
+			}
+
+			newIndex = (previousTaskIndexNumber + nextTaskIndexNumber) / 2;
+			status = newTasks[actualTaskIndex].status;
 
 			return newTasks;
+		});
+		api
+			.patch(`/tasks/${idTask}`, { index_number: newIndex, status })
+			.then((res) => console.log(res))
+			.catch((e) => console.log(e));
+	};
+
+	const toogleEditTaskModal = (idTask: number, cordinates: ICordinatesTask) => {
+		setEditTaskModal((previous) => {
+			const body = document.querySelector("body");
+			if (previous.isOpen) {
+				body!.style.overflowY = "auto";
+			} else {
+				body!.style.overflowY = "hidden";
+			}
+			return {
+				isOpen: !previous.isOpen,
+				idTask,
+				cordinates,
+			};
+		});
+	};
+
+	const updateCordinatesOnScroll = (cordinates: ICordinatesTask) => {
+		setEditTaskModal((previous) => {
+			return {
+				...previous,
+				cordinates,
+			};
 		});
 	};
 
@@ -130,6 +209,9 @@ export const TaskContextProvider = ({ children }: IProviderProps) => {
 				move,
 				addTask,
 				editTaskName,
+				toogleEditTaskModal,
+				editTaskModal,
+				updateCordinatesOnScroll,
 			}}
 		>
 			{children}

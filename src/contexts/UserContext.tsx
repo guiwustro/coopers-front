@@ -8,6 +8,8 @@ import {
 } from "react";
 import { api } from "../api";
 import { IFormLogin } from "../components/ModalLogin";
+import { useModalContext } from "./ModalContext";
+import { toast } from "react-hot-toast";
 
 export interface IProviderProps {
 	children: React.ReactNode;
@@ -29,14 +31,26 @@ const UserContext = createContext({} as IUserContext);
 
 export const UserContextProvider = ({ children }: IProviderProps) => {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const { toogleModal } = useModalContext();
 
 	const loginUser = async (loginData: IFormLogin) => {
 		try {
 			const { data }: ILoginRes = await api.post("/login", loginData);
 			localStorage.setItem("@coopers:token", data.token);
+			toogleModal();
+
 			setIsAuthenticated(true);
 		} catch (error) {
 			console.log(error);
+			toast.error("Wrong e-mail or password.");
+		}
+	};
+
+	const createUser = async (userData: IFormLogin) => {
+		try {
+			const { data }: ILoginRes = await api.post("/users", userData);
+		} catch (error) {
+			toast.error("E-mail already registered. Please use another.");
 		}
 	};
 

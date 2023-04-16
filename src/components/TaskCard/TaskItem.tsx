@@ -1,11 +1,11 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import ProgressIcon from "../../assets/ProgressIcon.svg";
 import DoneIcon from "../../assets/check-icon.svg";
 import NewIcon from "../../assets/no-checked-icon.svg";
 import { useTaskContext } from "../../contexts/TaskContext";
 import { TaskItemContainer } from "./styles";
-
+import EditImage from "../../assets/edit-button.svg";
 interface ITaskItemProps {
 	type: "progress" | "done";
 	name: string;
@@ -22,7 +22,13 @@ const TaskIcon = {
 const TaskItem = ({ type, name, id, index }: ITaskItemProps) => {
 	const ref = useRef<HTMLDivElement>();
 	const { move } = useTaskContext();
-	const { toogleTaskStatus, deleteTask } = useTaskContext();
+	const {
+		toogleTaskStatus,
+		deleteTask,
+		toogleEditTaskModal,
+		updateCordinatesOnScroll,
+		editTaskModal,
+	} = useTaskContext();
 	const [{ isDragging }, dragRef] = useDrag(() => ({
 		type: "TASK",
 		item: { id, index },
@@ -57,6 +63,22 @@ const TaskItem = ({ type, name, id, index }: ITaskItemProps) => {
 		},
 	});
 	dragRef(dropRef(ref));
+	const cordinatesTask = {
+		x: ref.current?.getBoundingClientRect().x!,
+		y: ref.current?.getBoundingClientRect().y!,
+		width: ref.current?.getBoundingClientRect().width!,
+	};
+	useEffect(() => {
+		if (editTaskModal.idTask === id) {
+			updateCordinatesOnScroll({
+				x: ref.current?.getBoundingClientRect().x!,
+				y: ref.current?.getBoundingClientRect().y!,
+				width: ref.current?.getBoundingClientRect().width!,
+			});
+		}
+		console.log(cordinatesTask);
+	}, [ref.current?.getBoundingClientRect().y]);
+
 	return (
 		<TaskItemContainer ref={ref as any} isDragging={isDragging}>
 			<div className="task__name">
@@ -70,9 +92,19 @@ const TaskItem = ({ type, name, id, index }: ITaskItemProps) => {
 				<p>{name}</p>
 			</div>
 
-			<button className="task-button__delete" onClick={() => deleteTask(id)}>
-				delete
-			</button>
+			<div className="task-button__container">
+				<button
+					className="task-button__edit"
+					onClick={() => {
+						toogleEditTaskModal(id, cordinatesTask);
+					}}
+				>
+					<img src={EditImage} alt="edit image" />
+				</button>
+				<button className="task-button__delete" onClick={() => deleteTask(id)}>
+					delete
+				</button>
+			</div>
 		</TaskItemContainer>
 	);
 };

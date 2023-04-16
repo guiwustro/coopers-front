@@ -10,9 +10,10 @@ import Grafismo from "../../assets/grafismos-lateral-esquerda.svg";
 import Carroussel from "../../components/Carroussel";
 import ContactForm from "../../components/ContactForm";
 import Footer from "../../components/Footer";
+import Alert from "../../components/Alert";
 
 export const Home = () => {
-	const { isModalOpen } = useModalContext();
+	const { isModalOpen, isOpenAlert } = useModalContext();
 	const { completedTasks, progressTasks } = useTaskContext();
 
 	return (
@@ -46,6 +47,7 @@ export const Home = () => {
 			<Carroussel />
 			<ContactForm />
 			<Footer />
+			{isOpenAlert && <Alert />}
 			{isModalOpen && <ModalLogin />}
 		</>
 	);

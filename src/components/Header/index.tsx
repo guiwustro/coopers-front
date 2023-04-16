@@ -21,15 +21,26 @@ const Header = () => {
 					onClick={logout}
 				/>
 			) : (
-				<Button
-					title="login"
-					backgroundColor="black"
-					width={120}
-					height={40}
-					padding="9px 35px 10px 40px"
-					fontSize="0.875rem"
-					onClick={toogleModal}
-				/>
+				<div className="header__buttons">
+					<Button
+						title="register"
+						backgroundColor="black"
+						width={120}
+						height={40}
+						padding="9px 35px 10px 40px"
+						fontSize="0.875rem"
+						onClick={toogleModal}
+					/>
+					<Button
+						title="login"
+						backgroundColor="black"
+						width={120}
+						height={40}
+						padding="9px 35px 10px 40px"
+						fontSize="0.875rem"
+						onClick={toogleModal}
+					/>
+				</div>
 			)}
 		</Container>
 	);

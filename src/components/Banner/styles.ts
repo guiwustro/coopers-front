@@ -14,7 +14,7 @@ export const Container = styled.div`
 		flex-direction: row;
 		padding-bottom: 75px;
 	}
-	@media screen and (min-width: 1440px) {
+	@media screen and (min-width: 1500px) {
 		max-width: 1440px;
 		margin: 0 auto;
 	}
@@ -45,6 +45,8 @@ export const LeftSideContainer = styled.div`
 		color: #000000;
 	}
 	@media screen and (min-width: 500px) {
+		min-width: 450px;
+
 		& > .main__title {
 			font-size: 5rem;
 			line-height: 4rem;
