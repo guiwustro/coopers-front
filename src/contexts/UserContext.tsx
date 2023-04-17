@@ -19,6 +19,7 @@ interface IUserContext {
 	logout: () => void;
 	isAuthenticated: boolean;
 	setIsAuthenticated: (value: SetStateAction<boolean>) => void;
+	createUser: (userData: IFormLogin) => Promise<void>;
 }
 
 export interface ILoginRes {
@@ -42,15 +43,18 @@ export const UserContextProvider = ({ children }: IProviderProps) => {
 			setIsAuthenticated(true);
 		} catch (error) {
 			console.log(error);
-			toast.error("Wrong e-mail or password.");
+			toast.error("Wrong username or password.");
 		}
 	};
 
 	const createUser = async (userData: IFormLogin) => {
 		try {
-			const { data }: ILoginRes = await api.post("/users", userData);
+			await api.post("/users", userData).then((data) => {
+				toast.success("Registration successful. Please login now.");
+				toogleModal();
+			});
 		} catch (error) {
-			toast.error("E-mail already registered. Please use another.");
+			toast.error("username already registered. Please use another.");
 		}
 	};
 
@@ -66,6 +70,7 @@ export const UserContextProvider = ({ children }: IProviderProps) => {
 				loginUser,
 				isAuthenticated,
 				setIsAuthenticated,
+				createUser,
 			}}
 		>
 			{children}
