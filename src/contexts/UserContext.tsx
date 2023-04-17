@@ -51,12 +51,17 @@ export const UserContextProvider = ({ children }: IProviderProps) => {
 	};
 
 	const createUser = async (userData: IFormLogin) => {
+		toast.loading("Creating your account... ");
+
 		try {
 			await api.post("/users", userData).then((data) => {
 				toast.success("Registration successful. Please login now.");
 				toogleModal();
+				toast.dismiss();
 			});
 		} catch (error) {
+			toast.dismiss();
+
 			toast.error("username already registered. Please use another.");
 		}
 	};
