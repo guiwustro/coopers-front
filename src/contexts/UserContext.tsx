@@ -35,10 +35,13 @@ export const UserContextProvider = ({ children }: IProviderProps) => {
 	const { toogleModal } = useModalContext();
 
 	const loginUser = async (loginData: IFormLogin) => {
+		toast.loading("Loading infos... ");
+
 		try {
 			const { data }: ILoginRes = await api.post("/login", loginData);
 			localStorage.setItem("@coopers:token", data.token);
 			toogleModal();
+			toast.dismiss();
 
 			setIsAuthenticated(true);
 		} catch (error) {

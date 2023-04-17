@@ -75,7 +75,7 @@ const ContactForm = () => {
 							label="Email*"
 							placeholder="example@example.com"
 							register={register}
-							registerName="name"
+							registerName="email"
 							typeInput="text"
 							isContactInput
 						/>

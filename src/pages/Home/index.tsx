@@ -26,18 +26,18 @@ export const Home = () => {
 				<img src={Grafismo} alt="grafismos" className="to-do__grafismo" />
 				<CardList>
 					<TaskCard
-						tasks={tasks.progress}
+						tasks={tasks?.progress}
 						borderColor="orange"
 						title="To-do"
 						subtitle="Take a breath. Start doing."
 						statusTask="progress"
 					/>
 					<TaskCard
-						tasks={tasks.done}
+						tasks={tasks?.done}
 						borderColor="green"
 						title="Done"
 						subtitle={
-							tasks.done.length > 0
+							tasks?.done.length > 0
 								? `You have done ${tasks.done.length} tasks.`
 								: "You have done no tasks "
 						}

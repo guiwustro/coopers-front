@@ -70,12 +70,14 @@ const ModalLogin = () => {
 									errors={errors.username?.message}
 									registerName={"username"}
 									typeInput="text"
+									typeForm="login"
 								/>
 								<FormGroup
 									label="Password:"
 									register={register}
 									errors={errors.password?.message}
 									registerName={"password"}
+									typeForm="login"
 									typeInput="password"
 								/>
 							</div>

@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { api } from "../api";
 import { useUserContext } from "./UserContext";
+import { toast } from "react-hot-toast";
 
 export interface IProviderProps {
 	children: React.ReactNode;
@@ -59,6 +60,11 @@ export const TaskContextProvider = ({ children }: IProviderProps) => {
 		done: [],
 		progress: [],
 	});
+	const [tasksBeforeUpdate, setTasksBeforeUpdate] = useState<ITask>({
+		done: [],
+		progress: [],
+	});
+
 	const [editTaskModal, setEditTaskModal] = useState<IEditTaskModal>({
 		isOpen: false,
 		idTask: 0,
@@ -93,63 +99,102 @@ export const TaskContextProvider = ({ children }: IProviderProps) => {
 
 	const toogleTaskStatus = (id: number, status: "progress" | "done") => {
 		const newStatus = status === "done" ? "progress" : "done";
-
-		api.patch(`/tasks/${id}`, { status: newStatus }).then((res) => {
-			setTasks((previous) => {
-				const newTasks = { ...previous };
-
-				const actualTaskIndex = newTasks[status].findIndex(
-					(task) => task.id === id
-				);
-				const actualTask = newTasks[status][actualTaskIndex];
-				actualTask.status = newStatus;
-				// Adiciona a task para o novo status
-				newTasks[newStatus] = [...newTasks[newStatus], actualTask];
-				// Deleta a task do status antigo
-				newTasks[status] = newTasks[status].filter(
-					(_, index) => index !== actualTaskIndex
-				);
-				return newTasks;
-			});
+		setTasks((previous) => {
+			setTasksBeforeUpdate(previous);
+			const newTasks = { ...previous };
+			const actualTaskIndex = newTasks[status].findIndex(
+				(task) => task.id === id
+			);
+			const actualTask = newTasks[status][actualTaskIndex];
+			actualTask.status = newStatus;
+			// Adiciona a task para o novo status
+			newTasks[newStatus] = [...newTasks[newStatus], actualTask];
+			// Deleta a task do status antigo
+			newTasks[status] = newTasks[status].filter(
+				(_, index) => index !== actualTaskIndex
+			);
+			return newTasks;
 		});
+		api
+			.patch(`/tasks/${id}`, { status: newStatus })
+			.then((res) => {})
+			.catch((e) => {
+				toast.error((e) =>
+					toast.error(
+						"Occured an error trying to update the status. Try again later."
+					)
+				);
+				setTasks(tasksBeforeUpdate);
+			});
 	};
 	const editTaskName = (name: string) => {
 		const id = editTaskModal.idTask;
 		const status = editTaskModal.status;
+		setTasks((previous) => {
+			setTasksBeforeUpdate(previous);
 
-		api.patch(`/tasks/${id}`, { name }).then((res) => {
-			setTasks((previous) => {
-				const copyTasks = { ...previous };
-				const editedTask = copyTasks[status].findIndex((t) => t.id === id);
-				copyTasks[status][editedTask] = {
-					...copyTasks[status][editedTask],
-					name,
-				};
-				return copyTasks;
-			});
-			toogleEditTaskModal(0, { x: 0, y: 0, width: 0 }, "progress");
+			const copyTasks = { ...previous };
+			const editedTask = copyTasks[status].findIndex((t) => t.id === id);
+			copyTasks[status][editedTask] = {
+				...copyTasks[status][editedTask],
+				name,
+			};
+			return copyTasks;
 		});
+		toogleEditTaskModal(0, { x: 0, y: 0, width: 0 }, "progress");
+
+		api
+			.patch(`/tasks/${id}`, { name })
+			.then((res) => {})
+			.catch((e) => {
+				toast.error((e) =>
+					toast.error(
+						"Occured an error trying to update the status. Try again later."
+					)
+				);
+				setTasks(tasksBeforeUpdate);
+			});
 	};
 
 	const addTask = (name: string) => {
-		api.post(`/tasks`, { name }).then((res) => {
-			setTasks((previous) => {
-				return {
-					done: [...previous.done],
-					progress: [...previous.progress, res.data],
-				};
-			});
-		});
+		toast.loading("Adding task... Please wait");
+		api
+			.post(`/tasks`, { name })
+			.then((res) => {
+				setTasks((previous) => {
+					return {
+						done: [...previous.done],
+						progress: [...previous.progress, res.data],
+					};
+				});
+				toast.dismiss();
+			})
+			.catch((e) =>
+				toast.error(
+					"Seems that occurred an error trying to add... Try again later"
+				)
+			);
 	};
 
 	const deleteTask = (id: number, status: "done" | "progress") => {
-		api.delete(`/tasks/${id}`).then((res) => {
-			setTasks((previous) => {
-				const copyObj = { ...previous };
-				copyObj[status] = copyObj[status].filter((task) => task.id !== id);
-				return copyObj;
-			});
+		setTasks((previous) => {
+			const copyObj = { ...previous };
+			setTasksBeforeUpdate(previous);
+			copyObj[status] = copyObj[status].filter((task) => task.id !== id);
+			return copyObj;
 		});
+
+		api
+			.delete(`/tasks/${id}`)
+			.then((res) => {})
+			.catch((e) => {
+				toast.error((e) =>
+					toast.error(
+						"Occured an error trying to update the status. Try again later."
+					)
+				);
+				setTasks(tasksBeforeUpdate);
+			});
 	};
 
 	const deleteAllTasks = (status: "done" | "progress") => {

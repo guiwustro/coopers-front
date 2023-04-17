@@ -56,7 +56,11 @@ export const ModalContainer = styled.div<IModalContainerProps>`
 		color: white;
 		font-family: "Montserrat";
 	}
-	top: ${({ cordinates }) => cordinates.y + 10 + "px"};
-	left: ${({ cordinates }) => cordinates.x + 55 + "px"};
+	top: ${({ cordinates }) => cordinates.y + "px"};
+	left: ${({ cordinates }) => cordinates.x + 40 + "px"};
 	width: ${({ cordinates }) => "240px"};
+	@media screen and (min-width: 400px) {
+		top: ${({ cordinates }) => cordinates.y + 10 + "px"};
+		left: ${({ cordinates }) => cordinates.x + 55 + "px"};
+	}
 `;

@@ -13,8 +13,7 @@ const ToDoTitle = () => {
 			<CenterContainer>
 				<img src={Arrow} alt="scroll" />
 			</CenterContainer>
-			<Container>
-				<div></div>
+			<Container id="todo">
 				<Title>
 					<h2>To-do List</h2>
 					<img src={GreenLine} alt="Linha verde" />

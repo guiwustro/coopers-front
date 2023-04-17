@@ -143,16 +143,22 @@ export const AddButton = styled.button`
 `;
 
 export const FormAddContainer = styled.form`
-	padding: 0 38px 0 23px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	gap: 10px;
 	& > textarea {
 		resize: none;
 		border-radius: 4px;
 		border-color: #999999;
 		min-height: 46px;
-		width: 200px;
 		padding: 8px;
+	}
+	@media screen and (min-width: 400px) {
+		padding: 0 38px 0 23px;
+
+		& > textarea {
+			width: 200px;
+		}
 	}
 `;

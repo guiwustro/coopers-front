@@ -13,6 +13,7 @@ interface IFormGroupProps {
 	control?: any;
 	isPhone?: boolean;
 	isContactInput?: boolean;
+	typeForm?: string;
 }
 
 export const FormGroup = ({
@@ -25,6 +26,7 @@ export const FormGroup = ({
 	placeholder,
 	isPhone,
 	isContactInput,
+	typeForm = "form",
 }: IFormGroupProps) => {
 	if (isPhone) {
 		return (
@@ -58,12 +60,12 @@ export const FormGroup = ({
 	}
 	return (
 		<FormGroupContainer errors={!!errors} isContactInput={isContactInput}>
-			<Label htmlFor={registerName} isContactInput={isContactInput}>
+			<Label htmlFor={registerName + typeForm} isContactInput={isContactInput}>
 				{label}
 			</Label>
 			<Input
 				type={typeInput}
-				id={registerName}
+				id={registerName + typeForm}
 				isContactInput={isContactInput}
 				{...register(registerName)}
 				placeholder={placeholder}
