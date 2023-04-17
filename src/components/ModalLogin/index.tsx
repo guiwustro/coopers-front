@@ -33,7 +33,7 @@ const ModalLogin = () => {
 
 	const onError = () => {
 		// toast.error("Preencha todos os campos corretamente");
-		toast.error("Wrong e-mail or password.");
+		toast.error("Wrong username or password.");
 	};
 
 	const onSuccess = (data: IFormLogin) => {

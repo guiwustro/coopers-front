@@ -55,7 +55,7 @@ const ContactForm = () => {
 
 			<FormContainer>
 				<div className="title-contact__container">
-					<img src={contactEmailImage} alt="e-mail" />
+					<img src={contactEmailImage} alt="username" />
 					<h4>
 						<span>GET IN</span>
 						<span className="title-contact--bold">TOUCH</span>

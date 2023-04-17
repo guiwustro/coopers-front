@@ -4,9 +4,8 @@ import { useUserContext } from "../../contexts/UserContext";
 import Button from "../Button";
 import { Container } from "./styles";
 const Header = () => {
-	const { toogleModal } = useModalContext();
+	const { toogleModal, openModal } = useModalContext();
 	const { logout, isAuthenticated } = useUserContext();
-	console.log(isAuthenticated);
 	return (
 		<Container>
 			<img src={Logo} alt="Logo Cooper" />
@@ -29,7 +28,7 @@ const Header = () => {
 						height={40}
 						padding="9px 35px 10px 40px"
 						fontSize="0.875rem"
-						onClick={toogleModal}
+						onClick={() => openModal("register")}
 					/>
 					<Button
 						title="login"
@@ -38,7 +37,7 @@ const Header = () => {
 						height={40}
 						padding="9px 35px 10px 40px"
 						fontSize="0.875rem"
-						onClick={toogleModal}
+						onClick={() => openModal("login")}
 					/>
 				</div>
 			)}
