@@ -69,7 +69,7 @@ O projeto foi realizado em React e as principais bibliotecas utilizadas foram:
 
 ## Usabilidade
 <div align="center">
-<img src="./project-gif.gif" width="300"/>
+<img src="./project-gif.gif" />
 </div>
 ## Como iniciar o projeto
 
