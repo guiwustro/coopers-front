@@ -68,7 +68,9 @@ O projeto foi realizado em React e as principais bibliotecas utilizadas foram:
 - react-hook-form;
 
 ## Usabilidade
-
+<div align="center">
+<img src="./project-gif.gif" width="300"/>
+</div>
 ## Como iniciar o projeto
 
 Para iniciar o projeto, siga os comandos abaixo, lembrando que é necessário ter
