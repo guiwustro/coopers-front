@@ -10,7 +10,7 @@ Link do projeto</a>
 ## Sobre o projeto
 
 No geral, não tive grandes dificuldades no desenvolvimento do projeto, pois
-desenvolvi utilizando uma tecnologia que já estou habituado. A parte mais
+desenvolvi utilizando o React, tecnologia que já estou habituado. A parte mais
 desafiadora do projeto, foi o drag and drop da lista de tarefas, tanto o
 back-end quanto o front-end.
 
@@ -37,7 +37,7 @@ Tasks, entre outros, e por fim, fiz alguns ajustes no back-end, adicionando a
 funcionalidade que persistisse a mudança da ordem de posição das tarefas.
 
 Por fim, para melhorar a performance da aplicação com relação a resposta ao
-usuário na parte do To-tolist, ao invés de atualizar o estado apenas depois da
+usuário na parte do To-do-list, ao invés de atualizar o estado apenas depois da
 confirmação da API, foi feito a mudança do estado antes, e no caso da requisição
 falhar, o estado volta para o estado original, notificando o usuário um erro que
 não foi possível fazer a atualização. Apenas na criação é colocado um toast de
