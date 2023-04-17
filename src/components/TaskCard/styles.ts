@@ -15,7 +15,6 @@ export const TaskCardContainer = styled.li<ITaskCardProps>`
 	justify-content: center;
 	gap: 3px;
 	box-shadow: 0px 4px 12px rgba(66, 66, 66, 0.198454);
-
 	& > h3 {
 		font-family: "Poppins";
 		font-style: normal;

@@ -11,10 +11,11 @@ import Carroussel from "../../components/Carroussel";
 import ContactForm from "../../components/ContactForm";
 import Footer from "../../components/Footer";
 import Alert from "../../components/Alert";
+import ModalRegister from "../../components/ModalRegister";
 
 export const Home = () => {
-	const { isModalOpen, isOpenAlert } = useModalContext();
-	const { completedTasks, progressTasks } = useTaskContext();
+	const { isOpenAlert, configModal } = useModalContext();
+	const { tasks } = useTaskContext();
 
 	return (
 		<>
@@ -25,19 +26,19 @@ export const Home = () => {
 				<img src={Grafismo} alt="grafismos" className="to-do__grafismo" />
 				<CardList>
 					<TaskCard
-						tasks={progressTasks}
+						tasks={tasks.progress}
 						borderColor="orange"
 						title="To-do"
 						subtitle="Take a breath. Start doing."
 						statusTask="progress"
 					/>
 					<TaskCard
-						tasks={completedTasks}
+						tasks={tasks.done}
 						borderColor="green"
 						title="Done"
 						subtitle={
-							completedTasks.length > 0
-								? `You have done ${completedTasks.length} tasks.`
+							tasks.done.length > 0
+								? `You have done ${tasks.done.length} tasks.`
 								: "You have done no tasks "
 						}
 						statusTask="done"
@@ -48,7 +49,12 @@ export const Home = () => {
 			<ContactForm />
 			<Footer />
 			{isOpenAlert && <Alert />}
-			{isModalOpen && <ModalLogin />}
+			{configModal.isOpen && configModal.modalType === "login" && (
+				<ModalLogin />
+			)}
+			{configModal.isOpen && configModal.modalType === "register" && (
+				<ModalRegister />
+			)}
 		</>
 	);
 };

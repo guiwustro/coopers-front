@@ -6,6 +6,7 @@ import NewIcon from "../../assets/no-checked-icon.svg";
 import { useTaskContext } from "../../contexts/TaskContext";
 import { TaskItemContainer } from "./styles";
 import EditImage from "../../assets/edit-button.svg";
+import { api } from "../../api";
 interface ITaskItemProps {
 	type: "progress" | "done";
 	name: string;
@@ -21,7 +22,7 @@ const TaskIcon = {
 
 const TaskItem = ({ type, name, id, index }: ITaskItemProps) => {
 	const ref = useRef<HTMLDivElement>();
-	const { move } = useTaskContext();
+	const { moveTask, tasks } = useTaskContext();
 	const {
 		toogleTaskStatus,
 		deleteTask,
@@ -31,7 +32,7 @@ const TaskItem = ({ type, name, id, index }: ITaskItemProps) => {
 	} = useTaskContext();
 	const [{ isDragging }, dragRef] = useDrag(() => ({
 		type: "TASK",
-		item: { id, index },
+		item: { id, index, status: type, name },
 		collect: (monitor) => ({
 			isDragging: monitor.isDragging(),
 		}),
@@ -39,11 +40,23 @@ const TaskItem = ({ type, name, id, index }: ITaskItemProps) => {
 
 	const [, dropRef] = useDrop({
 		accept: "TASK",
-		hover(item: { id: number; index: number }, monitor) {
+		hover(
+			item: {
+				id: number;
+				index: number;
+				status: "done" | "progress";
+				name: string;
+			},
+			monitor
+		) {
+			// ITEM.index => index da Task que está sendo movida;
+			// INDEX => index da Task que esta o HOVER.
 			// console.log(item.id, "do hover");
 			const draggedIndex = item.index;
 			const targetIndex = index;
-			if (draggedIndex === targetIndex) {
+			const draggedList = item.status;
+
+			if (draggedIndex === targetIndex && draggedList === type) {
 				return;
 			}
 			const targetSize = ref.current!.getBoundingClientRect();
@@ -55,10 +68,47 @@ const TaskItem = ({ type, name, id, index }: ITaskItemProps) => {
 			if (draggedIndex < targetIndex && draggedTop < targetCenter) {
 				return;
 			}
+
 			if (draggedIndex > targetIndex && draggedTop > targetCenter) {
 				return;
 			}
-			move(draggedIndex, targetIndex, item.id);
+			moveTask(draggedIndex, targetIndex, item.id, type);
+			item.index = targetIndex;
+		},
+		drop(item, monitor) {
+			const targetIndex = index;
+			// [ab,cd,ef,gh] targetIndex = 1
+			// [gh,ef,cd,ab] targetIndex = 2 4 -1 -1
+			// s;
+			const draggedIndex = item.index;
+			const draggedList = item.status;
+
+			// if (draggedIndex === targetIndex && draggedList === type) {
+			// 	return;
+			// }
+			const targetSize = ref.current!.getBoundingClientRect();
+			const targetCenter = (targetSize.bottom - targetSize.top) / 2;
+
+			const draggedOffSet = monitor.getClientOffset();
+			const draggedTop = (draggedOffSet?.y || 0) - targetSize.top;
+
+			// if (draggedIndex < targetIndex && draggedTop < targetCenter) {
+			// 	return;
+			// }
+
+			// if (draggedIndex > targetIndex && draggedTop > targetCenter) {
+			// 	return;
+			// }
+			api
+				.patch(`/tasks/${item.id}`, {
+					index_number: targetIndex,
+					status: type,
+				})
+				.then((res) => console.log(res))
+				.catch((e) => console.log(e));
+			moveTask(draggedIndex, targetIndex, item.id, type);
+			//targetIndex tem q ser o INVERSO
+
 			item.index = targetIndex;
 		},
 	});
@@ -76,7 +126,6 @@ const TaskItem = ({ type, name, id, index }: ITaskItemProps) => {
 				width: ref.current?.getBoundingClientRect().width!,
 			});
 		}
-		console.log(cordinatesTask);
 	}, [ref.current?.getBoundingClientRect().y]);
 
 	return (
@@ -96,12 +145,15 @@ const TaskItem = ({ type, name, id, index }: ITaskItemProps) => {
 				<button
 					className="task-button__edit"
 					onClick={() => {
-						toogleEditTaskModal(id, cordinatesTask);
+						toogleEditTaskModal(id, cordinatesTask, type);
 					}}
 				>
 					<img src={EditImage} alt="edit image" />
 				</button>
-				<button className="task-button__delete" onClick={() => deleteTask(id)}>
+				<button
+					className="task-button__delete"
+					onClick={() => deleteTask(id, type)}
+				>
 					delete
 				</button>
 			</div>

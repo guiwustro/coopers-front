@@ -6,23 +6,27 @@ export interface IProviderProps {
 	children: React.ReactNode;
 }
 interface ITaskContext {
-	tasks: ITask[];
-	completedTasks: ITask[];
-	progressTasks: ITask[];
+	tasks: ITask;
 	toogleTaskStatus: (id: number, status: "progress" | "done") => void;
-	deleteTask: (id: number) => void;
+	deleteTask: (id: number, status: "done" | "progress") => void;
 	deleteAllTasks: (status: "done" | "progress") => void;
-	move: (from: number, to: number, idTask: number) => void;
+	moveTask: (
+		from: number,
+		to: number,
+		idTask: number,
+		status: "done" | "progress"
+	) => void;
 	addTask: (name: string) => void;
 	editTaskName: (name: string) => void;
 	toogleEditTaskModal: (
 		idTask: number,
-		cordinatesTask: ICordinatesTask
+		cordinatesTask: ICordinatesTask,
+		status: "done" | "progress"
 	) => void;
 	editTaskModal: IEditTaskModal;
 	updateCordinatesOnScroll: (cordinates: ICordinatesTask) => void;
 }
-export interface ITask {
+export interface ITaskInfo {
 	id: number;
 	name: string;
 	status: "progress" | "done";
@@ -33,6 +37,7 @@ interface IEditTaskModal {
 	isOpen: boolean;
 	idTask: number;
 	cordinates: ICordinatesTask;
+	status: "progress" | "done";
 }
 
 export interface ICordinatesTask {
@@ -41,14 +46,23 @@ export interface ICordinatesTask {
 	width: number;
 }
 
+export interface ITask {
+	progress: ITaskInfo[];
+	done: ITaskInfo[];
+}
+
 const TaskContext = createContext({} as ITaskContext);
 
 export const TaskContextProvider = ({ children }: IProviderProps) => {
 	const { setIsAuthenticated, isAuthenticated } = useUserContext();
-	const [tasks, setTasks] = useState<ITask[]>([]);
+	const [tasks, setTasks] = useState<ITask>({
+		done: [],
+		progress: [],
+	});
 	const [editTaskModal, setEditTaskModal] = useState<IEditTaskModal>({
 		isOpen: false,
 		idTask: 0,
+		status: "progress",
 		cordinates: {
 			x: 0,
 			y: 0,
@@ -56,13 +70,18 @@ export const TaskContextProvider = ({ children }: IProviderProps) => {
 		},
 	});
 
-	const completedTasks = tasks?.filter((task) => task.status === "done");
-	const progressTasks = tasks?.filter((task) => task.status === "progress");
 	const getAllTasks = () => {
 		api
 			.get("/tasks")
 			.then((response) => {
-				setTasks(response.data);
+				setTasks({
+					progress: response.data.filter(
+						(task: ITaskInfo) => task.status === "progress"
+					),
+					done: response.data.filter(
+						(task: ITaskInfo) => task.status === "done"
+					),
+				});
 				setIsAuthenticated(true);
 			})
 			.catch((error) => {
@@ -73,50 +92,62 @@ export const TaskContextProvider = ({ children }: IProviderProps) => {
 	};
 
 	const toogleTaskStatus = (id: number, status: "progress" | "done") => {
-		setTasks((previous) => {
-			const newTasks = [...previous];
-			const newStatus = status === "done" ? "progress" : "done";
-			const actualTaskIndex = newTasks.findIndex((task) => task.id === id);
-			updateTaskStatus(id, newStatus);
-			if (actualTaskIndex != -1) {
-				newTasks[actualTaskIndex] = {
-					...newTasks[actualTaskIndex],
-					status: newStatus,
-				};
-			}
-			return newTasks;
+		const newStatus = status === "done" ? "progress" : "done";
+
+		api.patch(`/tasks/${id}`, { status: newStatus }).then((res) => {
+			setTasks((previous) => {
+				const newTasks = { ...previous };
+
+				const actualTaskIndex = newTasks[status].findIndex(
+					(task) => task.id === id
+				);
+				const actualTask = newTasks[status][actualTaskIndex];
+				actualTask.status = newStatus;
+				// Adiciona a task para o novo status
+				newTasks[newStatus] = [...newTasks[newStatus], actualTask];
+				// Deleta a task do status antigo
+				newTasks[status] = newTasks[status].filter(
+					(_, index) => index !== actualTaskIndex
+				);
+				return newTasks;
+			});
 		});
 	};
-
-	const updateTaskStatus = (id: number, status: "progress" | "done") => {
-		api.patch(`/tasks/${id}`, { status }).then((res) => {
-			console.log(res.data);
-		});
-	};
-
 	const editTaskName = (name: string) => {
 		const id = editTaskModal.idTask;
+		const status = editTaskModal.status;
+
 		api.patch(`/tasks/${id}`, { name }).then((res) => {
 			setTasks((previous) => {
-				const copyTasks = [...previous];
-				const editedTask = previous.findIndex((t) => t.id === id);
-				copyTasks[editedTask] = { ...copyTasks[editedTask], name };
+				const copyTasks = { ...previous };
+				const editedTask = copyTasks[status].findIndex((t) => t.id === id);
+				copyTasks[status][editedTask] = {
+					...copyTasks[status][editedTask],
+					name,
+				};
 				return copyTasks;
 			});
-			toogleEditTaskModal(0, { x: 0, y: 0, width: 0 });
+			toogleEditTaskModal(0, { x: 0, y: 0, width: 0 }, "progress");
 		});
 	};
 
 	const addTask = (name: string) => {
 		api.post(`/tasks`, { name }).then((res) => {
-			setTasks((previous) => [res.data, ...previous]);
+			setTasks((previous) => {
+				return {
+					done: [...previous.done],
+					progress: [...previous.progress, res.data],
+				};
+			});
 		});
 	};
 
-	const deleteTask = (id: number) => {
+	const deleteTask = (id: number, status: "done" | "progress") => {
 		api.delete(`/tasks/${id}`).then((res) => {
 			setTasks((previous) => {
-				return previous.filter((task) => task.id !== id);
+				const copyObj = { ...previous };
+				copyObj[status] = copyObj[status].filter((task) => task.id !== id);
+				return copyObj;
 			});
 		});
 	};
@@ -124,7 +155,9 @@ export const TaskContextProvider = ({ children }: IProviderProps) => {
 	const deleteAllTasks = (status: "done" | "progress") => {
 		api.delete(`/tasks/all/${status}`).then(() => {
 			setTasks((previous) => {
-				return previous.filter((task) => task.status !== status);
+				const copyObj = { ...previous };
+				copyObj[status] = [];
+				return copyObj;
 			});
 		});
 	};
@@ -137,42 +170,65 @@ export const TaskContextProvider = ({ children }: IProviderProps) => {
 		}
 	}, [isAuthenticated]);
 
-	const move = (from: number, to: number, idTask: number) => {
-		let newIndex;
-		let status;
+	const moveTask = (
+		from: number,
+		to: number,
+		idTask: number,
+		status: "done" | "progress"
+	) => {
 		setTasks((previous) => {
-			const newTasks = [...previous];
-			console.log(from, to, "ss", idTask);
-			newTasks.splice(to, 0, newTasks.splice(from, 1)[0]);
+			const newTasks = { ...previous };
 
-			const actualTaskIndex = newTasks.findIndex((t) => t.id === idTask);
+			let actualTaskIndex = newTasks[status].findIndex((t) => t?.id === idTask);
+			// se não estiver na mesma lista
+			const oldStatus = status === "done" ? "progress" : "done";
 
-			// caso não tenha última tarefa definida
-			let nextTaskIndexNumber =
-				(newTasks[actualTaskIndex - 1]?.index_number || 0) + 1024;
-			// caso não tenha a primeira tarefa definida
-			let previousTaskIndexNumber =
-				(newTasks[actualTaskIndex - 1]?.index_number || 0) - 1024;
+			if (actualTaskIndex === -1) {
+				// Adicionar na lista nova
+				// actualTaskIndex = newTasks[status].findIndex((t) => t.id === idTask);
+				actualTaskIndex = newTasks[oldStatus].findIndex(
+					(t) => t?.id === idTask
+				);
+				newTasks[oldStatus][actualTaskIndex].status = status;
 
-			if (newTasks[actualTaskIndex - 1]) {
-				previousTaskIndexNumber = newTasks[actualTaskIndex - 1].index_number;
+				newTasks[status].splice(
+					to,
+					0,
+					newTasks[oldStatus].splice(actualTaskIndex, 1)[0]
+				);
+
+				// Remover da lista antiga
+				newTasks[oldStatus] = newTasks[oldStatus].filter(
+					(t, index) => t.id !== idTask
+				);
+
+				// Filtrar possíveis undefineds na lista
+				newTasks[oldStatus] = newTasks[oldStatus].filter(
+					(t) => t !== undefined
+				);
+				newTasks[status] = newTasks[status].filter((t) => t !== undefined);
+				console.log(newTasks);
+				return newTasks;
+			} else {
+				newTasks[status].splice(to, 0, newTasks[status].splice(from, 1)[0]);
+				newTasks[status] = newTasks[status].filter((t) => t !== undefined);
+				newTasks[oldStatus] = newTasks[oldStatus].filter(
+					(t) => t !== undefined
+				);
+				return newTasks;
 			}
-			if (newTasks[actualTaskIndex + 1]) {
-				nextTaskIndexNumber = newTasks[actualTaskIndex + 1].index_number;
-			}
-
-			newIndex = (previousTaskIndexNumber + nextTaskIndexNumber) / 2;
-			status = newTasks[actualTaskIndex].status;
-
-			return newTasks;
 		});
-		api
-			.patch(`/tasks/${idTask}`, { index_number: newIndex, status })
-			.then((res) => console.log(res))
-			.catch((e) => console.log(e));
+		// api
+		// 	.patch(`/tasks/${idTask}`, { index_number: to, status })
+		// 	.then((res) => console.log(res))
+		// 	.catch((e) => console.log(e));
 	};
 
-	const toogleEditTaskModal = (idTask: number, cordinates: ICordinatesTask) => {
+	const toogleEditTaskModal = (
+		idTask: number,
+		cordinates: ICordinatesTask,
+		status: "done" | "progress"
+	) => {
 		setEditTaskModal((previous) => {
 			const body = document.querySelector("body");
 			if (previous.isOpen) {
@@ -183,6 +239,7 @@ export const TaskContextProvider = ({ children }: IProviderProps) => {
 			return {
 				isOpen: !previous.isOpen,
 				idTask,
+				status,
 				cordinates,
 			};
 		});
@@ -201,12 +258,10 @@ export const TaskContextProvider = ({ children }: IProviderProps) => {
 		<TaskContext.Provider
 			value={{
 				tasks,
-				completedTasks,
-				progressTasks,
 				toogleTaskStatus,
 				deleteTask,
 				deleteAllTasks,
-				move,
+				moveTask,
 				addTask,
 				editTaskName,
 				toogleEditTaskModal,

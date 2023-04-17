@@ -5,21 +5,21 @@ import { Container, ModalContainer } from "./styles";
 const TaskEditForm = () => {
 	const { tasks, editTaskName, toogleEditTaskModal, editTaskModal } =
 		useTaskContext();
-	const task = tasks.find((t) => t.id === editTaskModal.idTask);
+	const task = tasks[editTaskModal.status].find(
+		(t) => t.id === editTaskModal.idTask
+	);
 	const [newTaskName, setNewTaskName] = useState(task?.name);
-	console.log(task?.name);
 
 	const modalRef = useRef<HTMLHeadingElement>(null);
 
 	useEffect(() => {
 		function handleOutClick(event: any) {
 			const value = modalRef?.current;
-			console.log(event.target, "ss");
 			const isTextArea = event.target.className === "edit-task_text-area";
 			const isSaveBtn = event.target.className === "edit-task__button-save";
 
 			if (value && !value.contains(event.target) && !isTextArea && !isSaveBtn) {
-				toogleEditTaskModal(0, { x: 0, width: 0, y: 0 });
+				toogleEditTaskModal(0, { x: 0, width: 0, y: 0 }, editTaskModal.status);
 			}
 		}
 		document.addEventListener("mousedown", handleOutClick);
@@ -47,7 +47,13 @@ const TaskEditForm = () => {
 				</button>
 				<button
 					className="edit-task__button-close"
-					onClick={() => toogleEditTaskModal(0, { x: 0, width: 0, y: 0 })}
+					onClick={() =>
+						toogleEditTaskModal(
+							0,
+							{ x: 0, width: 0, y: 0 },
+							editTaskModal.status
+						)
+					}
 				>
 					fechar
 				</button>
